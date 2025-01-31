@@ -21,7 +21,7 @@ router.post("/register",async(req,res)=>{
        }
        const hashedPassword=await bcrypt.hash(password,10)
 
-       const newUser=new userModel({...req.body,hashedPassword,role:"admin"})
+       const newUser=new userModel({...req.body,password:hashedPassword,role:"admin"})
        console.log(newUser)
        await newUser.save()
 
@@ -44,7 +44,7 @@ router.post("/login",async(req,res)=>{
         if(!passwordMatch){
             return res.status(401).json({message:"password doesnt match please try again"})
         }
-        const token=jwt.sign({id:user._id},process.env.JWT,{expiresIn:"1h"})
+        const token=jwt.sign({id:user._id,role:user.role},process.env.JWT,{expiresIn:"1h"})
         console.log(token)
         return res.status(200).json({message:"user successfully logged in",token,user})
     }
@@ -106,15 +106,15 @@ router.post("/reset-password",async(req,res)=>{
     }
 })
 
-// router.get("/get-employees",authentication,async(req,res)=>{
-//     try{
-//         const response=await userModel.find()
-//         res.status(200).json(response)
-//     }
-//     catch(err){
-//         console.error(err)
-//         res.status(500).json({error:err.message})
-//     }
-// })
+router.get("/get-employees",authentication,async(req,res)=>{
+    try{
+        const response=await userModel.find()
+        res.status(200).json(response)
+    }
+    catch(err){
+        console.error(err)
+        res.status(500).json({error:err.message})
+    }
+})
 
 module.exports=router

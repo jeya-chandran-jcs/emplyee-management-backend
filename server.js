@@ -5,6 +5,7 @@ const cors=require("cors")
 const seedUsers = require("./config/userSeeding")
 const userRoutes=require("./routes/userRoutes")
 const taskRoutes=require("./routes/taskRoutes")
+const employeeRoutes=require("./routes/employeeRoutes")
 
 dotenv.config()
 const app=express()
@@ -21,6 +22,7 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRoutes)
 app.use("/task",taskRoutes)
+app.use("/employee",employeeRoutes)
 
 mongoose.connect(mongoUrl)
   .then(async() => {
