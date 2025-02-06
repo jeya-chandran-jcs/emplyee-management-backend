@@ -3,13 +3,14 @@ const employeeModel=require("../models/employeeModel")
 const taskModel=require("../models/taskModel")
 const authentication=require("../middleware/authMiddleware")
 const userModel = require("../models/userModel")
-
+const bcrypt=require("bcryptjs")
 const router=express.Router()
 
 router.get("/my-task",authentication,async(req,res)=>{
     try{
-        const userId=req.user._id
-        const tasks=await taskModel.find({userId:userId,status:"pending"})
+        const userId=req.user.id
+        const tasks=await taskModel.find({assignedTo:userId,status:"pending"})
+        console.log("tasks",tasks)
         if(!tasks){
             return res.status(404).json({message:"No pending tasks found"})
         }
